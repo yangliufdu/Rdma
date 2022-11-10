@@ -4,7 +4,7 @@ import time
 
 sys.path.append('..')
 
-from utils.connection import SKT, CM
+from utils.connection import SKT, CM, CommBase
 from utils.param_parser import parser
 
 from pyverbs.addr import AH, AHAttr, GlobalRoute
@@ -26,8 +26,13 @@ GRH_LENGTH = 40
 args = parser.parse_args()
 
 server = not bool(args['server_ip'])
-
+print(args['port'])
+print(args['server_ip'])
 conn = CM(args['port'], args['server_ip'])
+
+
+print("conn succeed");
+time.sleep(2)
 
 
 print('-' * 80)
@@ -38,27 +43,17 @@ if server:
 else:
     print("Running as client...")
 
-print('-' * 80)
-
-
-
+conn.handshake(str = "start")
 
 # Handshake to exchange information such as QP Number
-str1 = ''
-recv1 = conn._display_recv()
-if (recv1['str'] == 'start'):
-    for i in range (1000):
-        str1 += str(i)
-    time_start = time.time()   
-    for i in range (10000):
-        conn.handshake(str = str1)
-    if (i % 50 == 0)
-        time_end = time.time()
-        time_sum = time_end - time_start
-        print(time_sum)
-        time_start = time.time()
+
+for i in range(10000):
+    str = conn._display_recv()
+    print(str['str'])
+    print('*' * 80)
+    print(i)
+
 
 
 conn.close()
-
 print('-' * 80)
